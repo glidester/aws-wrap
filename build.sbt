@@ -47,13 +47,14 @@ libraryDependencies ++= Seq(
   Dependencies.Compile.awsJavaSDK_simpledb % "provided",
   Dependencies.Compile.awsJavaSDK_sns % "provided",
   Dependencies.Compile.awsJavaSDK_sqs % "provided",
+  Dependencies.Compile.awsJavaSDK_codecommit,
   Dependencies.Compile.slf4j
 )
 
 
 bintray.Plugin.bintrayPublishSettings
 
-bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
+bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future", "codecommit")
 
 
 

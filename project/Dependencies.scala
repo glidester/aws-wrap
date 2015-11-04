@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
 
   object V {
-    val awsJavaSDK  = "1.9.31"
+    val awsJavaSDK  = "1.10.4.1"
 
     val jodaTime    = "2.7"
     val jodaConvert = "1.7"
@@ -23,6 +23,7 @@ object Dependencies {
     val awsJavaSDK_sns = "com.amazonaws" % "aws-java-sdk-sns" % V.awsJavaSDK
     val awsJavaSDK_sqs = "com.amazonaws" % "aws-java-sdk-sqs" % V.awsJavaSDK
     // val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % V.awsJavaSDK exclude("joda-time", "joda-time")
+    val awsJavaSDK_codecommit = "com.amazonaws" % "aws-java-sdk-codecommit" % V.awsJavaSDK
 
     val jodaTime    = "joda-time" % "joda-time"    % V.jodaTime
     val jodaConvert = "org.joda"  % "joda-convert" % V.jodaConvert
