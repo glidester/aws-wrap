@@ -16,7 +16,11 @@
 
 package com.github.dwhjames.awswrap.dynamodb
 
+import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils
 import com.amazonaws.services.dynamodbv2.model._
+
+import scala.collection.JavaConverters._
 
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
@@ -62,6 +66,18 @@ object GameScore {
       )
     )
 
+  def jsonSerializer(i: GameScore): String = JsonDocumentSpec.json //TODO: fake implementation, replace with genson or something
+  def jsonDeserializer(json: String): GameScore = { //TODO: fake implementation, replace with genson or something
+    GameScore(
+      userId = "901",
+      gameTitle = "Galaxy Invaders",
+      topScore = 5842,
+      topScoreDateTime = DateTime.now.minusDays(1),
+      wins = 21,
+      losses = 72
+    )
+  }
+
   object Attributes {
     val userId           = "UserId"
     val gameTitle        = "GameTitle"
@@ -84,7 +100,20 @@ object GameScore {
         Attributes.gameTitle -> score.gameTitle
       )
 
-    override def toAttributeMap(score: GameScore) =
+    override def toAttributeMap(score: GameScore) = {
+      val item = new Item()
+          .withPrimaryKey(Attributes.userId, score.userId, Attributes.gameTitle, score.gameTitle)
+          .withJSON("document", jsonSerializer(score))
+
+      InternalUtils.toAttributeValues(item).asScala.toMap
+    }
+
+    override def fromAttributeMap(attributes: collection.mutable.Map[String, AttributeValue]) = {
+      val item: Item = Item.fromMap( InternalUtils.toSimpleMapValue(attributes.asJava) )
+      jsonDeserializer(item.getJSON("document"))
+    }
+
+    /*override def toAttributeMap(score: GameScore) =
       Map(
         Attributes.userId           -> score.userId,
         Attributes.gameTitle        -> score.gameTitle,
@@ -92,9 +121,9 @@ object GameScore {
         Attributes.topScoreDateTime -> fmt.print(score.topScoreDateTime),
         Attributes.wins             -> score.wins,
         Attributes.losses           -> score.losses
-      )
+      )*/
 
-    override def fromAttributeMap(item: collection.mutable.Map[String, AttributeValue]) =
+    /*override def fromAttributeMap(item: collection.mutable.Map[String, AttributeValue]) =
       GameScore(
         userId           = item(Attributes.userId),
         gameTitle        = item(Attributes.gameTitle),
@@ -102,6 +131,6 @@ object GameScore {
         topScoreDateTime = fmt.parseDateTime(item(Attributes.topScoreDateTime)),
         wins             = item(Attributes.wins),
         losses           = item(Attributes.losses)
-      )
+      )*/
   }
 }
